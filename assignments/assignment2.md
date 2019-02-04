@@ -49,7 +49,18 @@ fun plus(x: num, y: num): num {
 
 __Expected output__: `error`
 
-__Real output__:
+__Real output__: 
+``` bash
+ > fun plus(x: num, y: num): num {
+Invalid expression.
+ >     x+y
+Invalid expression.
+ > }
+Invalid expression.
+ > 3+3
+r0 = 6.00
+ >
+```
 
 __Notes__: Adding a second function with the same number of arguments is expected to crash the addition operator, since the overloading code can no longer figure out which function to call.
 
