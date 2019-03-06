@@ -127,5 +127,4 @@ that value when `libab_ref_get` is called.
 ## Conclusion
 We did not discover any bugs during the process. While it is true that we do not 100% understand
 how the garbage collection system works, it's most likely that memory allocated during the
-testing is freed correctly, but still belongs to the process, leading memory profiling software
-to show high memory usage.
+testing is freed correctly, but still belongs to the process, memory profiling software reports this as high memory usage.
