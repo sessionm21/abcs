@@ -72,10 +72,11 @@ greatest_test_res test_trie_put_get() {
   ASSERT_EQ(trie.empty_list.head, NULL);
   ASSERT_EQ(trie.empty_list.tail, NULL);
    
-  libab_trie *ptr = (libab_trie*)libab_trie_get(&trie, "doge"); 
-  ASSERT_EQ(ptr->empty_list.head->data, &trie);
+  const ll *ptr = libab_trie_get(&trie, "doge"); 
+  ASSERT_EQ(ptr->head->data, &trie);
 
-  ptr  = (libab_trie*)libab_trie_get(&trie, "derp");
+  ptr = libab_trie_get(&trie, "derp");
+  ASSERT_EQ(ptr->head->data, &trie);
   libab_trie_clear(&trie);
 
   PASS();
