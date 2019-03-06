@@ -62,7 +62,7 @@ a container, and thus will not be cheked for circular references.
 This test makes sure the garbage collection algorithm works fine for objects that have no references
 to other objects (despite being marked as containers). This tests the simple cases, and is akin
 to the GC running on empty lists and the like.
-#### Garbage Collection (robust)
+#### Garbage Collection (Robust)
 This test makes sure the garbage collection algorithm actually takes care of reference cycles.
 Two objects that reference each other are created, and pointer at each other. References them
 in the main code are then freed, and they are only remaining in the GC list. For this test

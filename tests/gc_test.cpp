@@ -1,6 +1,7 @@
 #include "gc_test.hpp"
+#include <iostream>
 
-greatest_test_res list_init() {
+greatest_test_res gc_init() {
   libab_gc_list list;
   libab_gc_list_init(&list);
   ASSERT_EQ(list.head_sentinel.next, &list.tail_sentinel);
@@ -8,76 +9,98 @@ greatest_test_res list_init() {
   PASS();
 }
 
-greatest_test_res add_node() {
+greatest_test_res gc_add() {
   libab_ref ref;
   libab_gc_list list;
   libab_gc_list_init(&list);
-  libab_ref_count* node = new libab_ref_count;
-  ref.count = node;
+  libab_ref_new(&ref, new int, [](void* v) { delete ((int*) v); });
   libab_gc_add(&ref, NULL, &list);
-  ASSERT_EQ(list.head_sentinel.next, node);
-  ASSERT_EQ(list.tail_sentinel.prev, node);
-  ASSERT_EQ(node->next, &list.tail_sentinel);
-  ASSERT_EQ(node->prev, &list.head_sentinel);
+
+  ASSERT_EQ(list.head_sentinel.next, ref.count);
+  ASSERT_EQ(list.tail_sentinel.prev, ref.count);
+  ASSERT_EQ(ref.count->next, &list.tail_sentinel);
+  ASSERT_EQ(ref.count->prev, &list.head_sentinel);
   ASSERT_EQ(ref.count->visit_children, NULL);
-  delete node;
+
+  libab_ref_free(&ref);
   PASS();
 }
 
-void helper_free(void* data) {
-  delete [] (int*)data;
-}
-
-greatest_test_res test_run() {
+greatest_test_res gc_run_basic() {
   // would also benefit from a test with valgrind
   libab_gc_list list;
-  libab_gc_list_init(&list);
-  libab_ref_count* ref1 = new libab_ref_count;
+  libab_ref ref1;
+  libab_ref ref2;
+  auto free_function = [](void* v) { delete[] ((int*) v); };
+  auto visit_function = [](void*, libab_visitor_function_ptr, void*) {};
 
-  ref1->data = new int[5];
-  ref1->free_func = helper_free;
-  ref1->strong = 0;
-  ref1->weak = 0;
-  libab_ref_count* before;
-  if(ref1->next) ref1->next->prev = ref1->prev;
-  if(ref1->prev) ref1->prev->next = ref1->next;
-  before = &list.tail_sentinel;
-  ref1->next = before;
-  ref1->prev = before->prev;
-  before->prev->next = ref1;
-  before->prev = ref1;
+  libab_gc_list_init(&list);
+  libab_ref_new(&ref1, new int[5], free_function);
+  libab_ref_new(&ref2, new int[5], free_function);
+  libab_gc_add(&ref1, visit_function, &list);
+  libab_gc_add(&ref2, visit_function, &list);
   libab_gc_run(&list);
 
-  ASSERT_EQ(list.head_sentinel.next, &list.tail_sentinel);
-  ASSERT_EQ(list.tail_sentinel.prev, &list.head_sentinel);
+  ASSERT_EQ(list.head_sentinel.next, ref1.count);
+  ASSERT_EQ(list.head_sentinel.next->next, ref2.count);
 
-  libab_gc_list_init(&list);
-  libab_gc_list list1;
-  libab_gc_list_init(&list1);
-  libab_ref_count* ref2 = new libab_ref_count;
-
-  ref2->data = NULL;
-  ref2->free_func = NULL;
-  ref2->strong = 0;
-  ref2->weak = 0;
-  libab_ref_count* before1;
-  if(ref2->next) ref2->next->prev = ref2->prev;
-  if(ref2->prev) ref2->prev->next = ref2->next;
-  before1 = &list1.tail_sentinel;
-  ref2->next = before1;
-  ref2->prev = before1->prev;
-  before1->prev->next = ref2;
-  before1->prev = ref2;
-  libab_gc_run(&list1);
-
-  ASSERT_EQ(list.head_sentinel.next, &list.tail_sentinel);
-  ASSERT_EQ(list.tail_sentinel.prev, &list.head_sentinel);
+  libab_ref_free(&ref1);
+  libab_ref_free(&ref2);
 
   PASS();
+}
+
+struct dumb_container {
+    bool freed;
+    libab_ref child;
+    
+    dumb_container() { freed = false; libab_ref_null(&child); }
+    void replace_child(const libab_ref* with) { libab_ref_free(&child); libab_ref_copy(with, &child); }
+    void mock_free() { freed = true; libab_ref_free(&child); }
+};
+
+greatest_test_res gc_run_robust() {
+    libab_ref ref1;
+    libab_ref ref2;
+    libab_gc_list list;
+    auto c1 = new dumb_container;
+    auto c2 = new dumb_container;
+    auto free_func = [](void* c) { ((dumb_container*) c)->mock_free(); };
+    auto visit_func = [](void* self, libab_visitor_function_ptr f, void* data) {
+        libab_gc_visit(&((dumb_container*) self)->child, f, data);
+    };
+
+    libab_gc_list_init(&list);
+    libab_ref_new(&ref1, c1, free_func);
+    libab_ref_new(&ref2, c2, free_func);
+    c1->replace_child(&ref2);
+    c2->replace_child(&ref1);
+
+    libab_gc_add(&ref1, visit_func, &list);
+    libab_gc_add(&ref2, visit_func, &list);
+
+    ASSERT_EQ(c1->freed, false);
+    ASSERT_EQ(c1->freed, false);
+
+    libab_ref_free(&ref1);
+    libab_ref_free(&ref2);
+
+    ASSERT_EQ(c1->freed, false);
+    ASSERT_EQ(c1->freed, false);
+
+    libab_gc_run(&list);
+    ASSERT_EQ(c1->freed, true);
+    ASSERT_EQ(c1->freed, true);
+
+    delete c1;
+    delete c2;
+
+    PASS();
 }
 
 SUITE(gc_suite) {
-  RUN_TEST(list_init);
-  RUN_TEST(add_node);
-  RUN_TEST(test_run);
+  RUN_TEST(gc_init);
+  RUN_TEST(gc_add);
+  RUN_TEST(gc_run_basic);
+  RUN_TEST(gc_run_robust);
 }
