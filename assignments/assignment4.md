@@ -45,7 +45,7 @@ of those functions is incorrect, it's possible that a child of an object isn't b
 and therefore that the garbage collection implementation is not provided with a complete
 list of "freeable" objects, and is not in itself doing anything wrong.
 
-## Tets Performed
+## Tests Performed
 
 ### Garbage Collection
 The garbage collection implementation in `abcs` is based on Python's
