@@ -9,16 +9,65 @@ Team Members: Ryan Alder, Danila Fedorin, Matthew Sessions
 Github Project Fork URL: [https://github.com/sessionm21/abcs](https://github.com/sessionm21/abcs)
 
 ## Initial Quality of the Project
-TODO: user design, code maintainability, general release-readiness
+
+### User Design
+TODO
+
+### Code Maintainability
+TODO
+
+### General Release-Readiness
+TODO
 
 ## Methods and Tools
-TODO: version control, testing tools, debuggers, libraries, environments, etc.
+
+### Version Control
+TODO
+
+### Testing Tools
+TODO
+
+### Debuggers
+TODO
+
+### Libraries
+TODO
+
+### Environments
+TODO
 
 ## Testing
-TODO: code and features tested, tests performed, issues found (automated + manually discovered)
+
+### Code and Features Tested
+TODO
+
+### Tests Performed
+TODO
+
+### Issues Found
+TODO
 
 ## Patching
-TODO: triage process, issues resolved, maintenance process types performed, regression testing
+
+### Triage Process
+TODO
+
+### Issues Resolved
+TODO
+
+### Maintenance Process Types Performed
+TODO
+
+### Regression Testing
+TODO
 
 ## Evaluation
-TODO: unresolved issues, recommendations, testing comparison
+
+### Unresolved Issues
+TODO
+
+### Recommendations
+TODO
+
+### Testing Comparison
+TODO
