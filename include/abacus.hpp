@@ -21,6 +21,7 @@ class abacus {
     public:
         abacus();
         const libab_basetype* get_basetype_string();
+        const char* get_error_messages();
         void add_variable(const std::string& name, ref val);
         void add_function(const std::string& name, libab_function_ptr ptr, const std::string& type);
         void add_operator_infix(const std::string& op, const std::string& func, int assoc, int prec);

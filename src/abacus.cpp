@@ -20,6 +20,10 @@ const libab_basetype* abacus::get_basetype_string() {
     return &basetype_string;
 }
 
+const char* abacus::get_error_messages() {
+    return ab.errormsg;
+}
+
 void abacus::add_variable(const std::string& name, ref val) {
     libab_set_variable((libab_table*) libab_ref_get(&ab.table), name.c_str(), val);
 }
