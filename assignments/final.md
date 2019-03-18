@@ -438,7 +438,7 @@ was fixed by adding the missing freeing and clearing code after the loop.
 TODO
 
 #### Ryan Alder: Improved Error Messages in parser.c
-TODO
+As previously mentioned, one of the largest issues that we found with abcs is the lack of informative error messages. For every single error the user was greeted with "Invalid Expression", regardless of what the error was. Given that, I set out to add more informative error statements in the parser. Error strings are set to the main struct, and accessed inside parser as the program encounters errors. Based on where the error is found, a unique error statement is set and then printed outside in main.cpp once it realizes the error variable has been set. A full set of potential errors has now been accounted for and manually tested for any errors the parser encounters.
 
 ### Maintenance Process Types Performed
 We did not perform adaptive, or preventive maintenance.
