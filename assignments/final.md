@@ -225,4 +225,30 @@ priority to create automated tests for type unification, which takes up a signif
 the interpreter.
 
 ### Testing Comparison
-TODO
+For this project, it turned out that manual testing was more effective at finding bugs. 
+This was likely because we did not have the manpower to write a sufficiently sophisticated
+set of test. Automated testing is easier to set up if the project begins with it in mind
+(using TDD or otherwise), and if tests are written alongside code. On the other hand,
+it is very difficult to write tests for a 4000+ line project without any formal specification
+of what each function / unit is supposed to do.
+
+Manual testing, on the other hand, tests the product through the eyes of the user. It's
+therefore much easier to use things like user stories ("as a user, I want to be able to add
+numbers by writing + between them") to create test cases. These test cases cover a broad
+section of the code, but are very helpful in finding behavior that deviates from the
+users' expectations.
+
+It wouldn't be fair to compare usability testing to the above two techniques. While it did
+not discover faults in the code, it did unearth issues with the interaction between the
+user and abcs. Since abcs' primary goal is to interact with users (it's a utility, after all),
+its usbility is incredibly important. As such, we believe that usability testing was a key
+component of our investigation into the software.
+
+Code review did not help our team very much. This was likely because most of the team members were completely
+unfamilliar with the code of the application, and even the domain of the software (programming language interpreters).
+As such, their feedback was frequently limited to stylistic remarks (formatting, variable name, etc). While these
+remarks help improve the maintainability of the code, they do not necessarily help with locating bugs. abcs is a
+complex system, and it requires a significant amount of state to be kept in the reviewers' heads in order
+to uncover actual bugs. Because the program code and state spans thousands of lines of code and several files,
+discovering real, complex bugs with code review is very difficult. This can be remedied by spending more
+time on the project, however, this is simply not realistic for our team of 3 full time college students.
