@@ -343,7 +343,6 @@ Explanation: this is a test of variables going out of scope.
 #### Automated Tests
 We wrote the following automated tests:
 
-------
 | _Test_ | _Explanation_ |
 |--------|---------------|
 |`ref_new_is_strong`| New reference counter pointers keep refcount up.|
