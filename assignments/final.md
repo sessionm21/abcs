@@ -125,7 +125,242 @@ These tests covered the following areas:
 * Garbage collection (via functions deliberately engineered to cause heavy memory allocation)
 
 ### Tests Performed
-TODO
+#### Usability Tests
+For usability testing, we had the user run through the following set of tasks:
+
+* Start the program
+* Add one number to another number
+* Call a trigonometric function (sin)
+* Change precision to be 20 digits
+* Implement a recursive factorial function (without the built-in factorial function)
+* Quit the program without using Ctrl-C
+
+This was done twice at different times, so that we could asses the learnability
+of the program.
+
+#### Manual Tests
+For manual testing, we performed a variety of tests, briefly summarized here:
+Input:
+
+`3+3`
+
+Explanation: This is the basic test for arithmetic.
+Input:
+
+`fun plus(x: num, y: num): num { x+y } 3+3`
+
+Explanation: This test makes sure that addition calls the plus function.
+
+Input:
+
+`fun plus(x: num): num { x+1 } 3+3`
+
+Explanation: This test makes sure that addition uses the binary plus function only.
+
+Input:
+
+`fun plus(x: num, y: num, z: num): num { x+y+z } 3+3`
+
+Explanation: This test makes sure that ternary plus isn't used by addition.
+
+Input:
+
+`1--2`
+
+Explanation: This test makes sure that unary prefix operators work, and can
+be disambiguated from binary operators with the same name.
+
+Input:
+
+`3!`
+
+Explanation: This test makes sure that unary postfix operators work.
+
+Input:
+
+`3+!4`
+
+Explanation: This test makes sure that postfix operators are parsed correctly.
+
+Input:
+
+`6-3*2+3^2^3+2`
+
+Explanation: This test makes sure that associativity and order of operations are correct.
+
+Input:
+
+`(6-3)*2`
+
+Explanation: This test makes sure that parentheses work as intended.
+
+Input:
+
+`(5-3`
+
+Explanation: This test makes sure that unbalanced parentheses cause errors.
+
+Input:
+
+`5-3)`
+
+Explanation: This test also makes sure unbalanced parentheses cause errors.
+
+Input:
+
+`fun test(x: 'T, y: 'T): 'T { x } test(3, 3)`
+
+Explanation: This tests generic type substitution with numbers. 
+
+Input:
+
+`fun test(x: 'T, y: 'T): 'T { x } test(3, true)`
+
+Explanation: This test makes sure generics don't allow incorrectly typed parameters.
+
+Input:
+
+`fun one_or_another(x: 'T, y: 'T): (bool)->'T { fun test(b: bool): 'T { if(b) x else y } }`
+
+Explanation: This is a prerequisite for other tests, used once again to check type parameter substitution.
+
+Input:
+
+`fun test(x: 'T, y: 'T): 'T { x }`
+
+Explanation: This is a prerequisite for other tests as well. This is just the equivalent of the Haskell "const" function.
+
+Input:
+
+`first = one_or_another(1, 2);`
+
+Explanation: This makes sure that generic functions are correctly returned and type substitution is performed as expected.
+
+Input:
+
+`fun test(a: num): num { a } test = fun weird(a: num): num { -a }`
+
+Explanation: This makes sure that assigning a function to a variable overrides overloading.
+
+Input:
+
+`plus(3)(7)`
+
+Explanation: This makes sure that partial function application works as expected, returning a partially applied function after the first call.
+
+Input:
+
+`fun do_something(f: (num)->num, x: num): num { f(x) }; a = plus(3); do_something(a, 7)`
+
+Explanation: This test makes sure that functions, including those that are partially applied, can be passed as values.
+
+Input:
+
+`x = 0; fun increment_x(): unit { x = x + 1; }; increment_x(); increment_x();`
+
+Explanation: This test makes sure that functions capture the scope in which they're declared.
+
+Input:
+
+`fun adder(start: num): () -> num { fun add(): num { prev = start; start = start + 1; prev } }`
+
+Explanation: This test makes sure that functions keep a reference to the scope in which they're declared even when
+it's not reachable by other means.
+
+Input:
+
+`a = adder(4); a(); a(); a()`
+
+Explanation: This is a continuation of the previos test (the closure is called several times)
+
+Input:
+
+`fun waste_space(x: num): (num)->num { ...omitted due to length... }; waste_space(5000)`
+
+Explanation: This is a test specifically designed to stress the garbage collector by allocating
+ a lot of memory via recursively created interdependent closures.
+
+Input:
+
+`if(true) 3 else 4`
+
+Explanation: This is a test that makes sure an if-expression evaluates the first branch if the condition is true.
+
+Input:
+
+`if(false) 3 else 4`
+
+Explanation: This is a test that makes sure an if-expression evaluates the second branch if the condition is true.
+
+Input:
+
+`if 3 else 4`
+
+Explanation: This is a test that makes sure parsing fails if an if-expression lacks a conditional.
+
+Input:
+
+`if () 3 else 4`
+
+Explanation: This is a test that makes sure an if-expression with an empty condition doesn't parse.
+
+Input:
+
+`while(x < 5) { x = x + 1 }`
+
+Explanation: This is a test that makes sure the while loop works as expected.
+
+Input:
+
+`while { x = x + 1}`
+
+Explanation: This is a test that makes sure that a while expression with no condition doesn't parse.
+
+Input:
+
+`while (3) { x = x + 1}`
+
+Explanation: This is a test that makes sure that a while expression with a non-boolean condition causes an error.
+
+Input:
+
+`a = 1; a`
+
+Explanation: This is a test of variable assignment.
+
+Input:
+
+`a = 1; a = 2; a`
+
+Explanation: This is a test of variable overwriting.
+
+Input:
+
+`{ a = 1 }; a`
+
+Explanation: this is a test of variables going out of scope.
+
+#### Automated Tests
+We wrote the following automated tests:
+
+------
+| _Test_ | _Explanation_ |
+|--------|---------------|
+|`ref_new_is_strong`| New reference counter pointers keep refcount up.|
+|`ref_new_no_gc`| New references don't have garbage collection enabled.|
+|`ref_new_free_func`| New references have the correct free function.|
+|`ref_new_not_null`| Newly allocated references aren't null.|
+|`ref_copy_value`| Copying works and increments reference count.|
+|`ref_copy_null`| Copying null creates another null reference.|
+|`ref_swap`| Swap works without changing refcounts.|
+|`ref_get`| References return the correct value when dereferenced.|
+|`gc_init`| Garbage collection correctly initializes an empty list.|
+|`gc_add`| Adding an item to garbage collection correctly configures it.|
+|`gc_run_basic`| Containers with no cycles are freed as expected.|
+|`gc_run_robust`| Containers with references cycles are freed as expected.|
+|`trie_init`|A trie is initialized correctly.|
+|`trie_clear`| A trie is cleared correctly.|
+|`trie_put_get`| Storing and retrieving from the trie work as expected.|
 
 ### Issues Found
 During usability testing, we found only one very significant issue - the error reporting. As we
