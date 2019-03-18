@@ -19,7 +19,7 @@ are reported to the user in the exact same way - by printing out the phrase "inv
 phrase covers syntax errors, type errors, and missing variable names. Essentially, it's impossible to effectively
 diagnose issues with user input without thoroughly checking every part of said input. Since abcs supports fairly
 complex constructs, such as control flow and recursion, this naturally leads to potentially big programs.
-Debugging suchg potentially big programs takes a very long time, as even finding a typo in a single line of
+Debugging such potentially big programs takes a very long time, as even finding a typo in a single line of
 code is sometimes a challenge. Otherwise, besides the fact that the program manual was not located in the root
 directory of the project, but rather in a subdirectory, there are no other significant usability issues.
 The project is usable, assuming an understanding of programming, which is expected from the project's target audience.
@@ -41,13 +41,13 @@ a variety of cleverly designed test cases (which didn't exist before our team's 
 We belive the project is largely release-ready. Despite several small bugs (numbers counting as false in loop conditions,
 and an elusive segmentation fault during type unification), the project operates as intended, and for the average
 user will not present any issues. We would recommend corrective maintenance to fix the loop condition bugs and
-to investigate the source of the segmentation fault. We also believe that the error messages should be
-improved to improve the learnability and efficiency of using the project.
+to investigate the source of the segmentation fault. We also believe that the unique error messages should be
+added to improve the learnability and efficiency of using the project.
 
 ## Methods and Tools
 
 ### Version Control
-The project is managed using the git VCS. It uses git to afairly deep level: the project is split
+The project is managed using the git VCS. It uses git to a fairly deep level: the project is split
 into several parts (abcs, the front end, libabacus, the library, libds, the data structures code, and
 liblex, a NFA-based tokenizer). Each of these parts is added as its own git submodule, and lives in its
 own repository. This is because each of the components can be used separately from the others - 
@@ -62,9 +62,9 @@ least sane.
 One of the tools we used was a C library called `greatest`. This library provides a variety of macros
 and assertions to help with creating unit tests. This saved us the work of writing test result output
 code and other plumbing which would otherwise be necessary in C. For some of the more
-complex test, especially those that tested the deallocation of memory, we used valgrind. This
+complex tests, especially those that tested the deallocation of memory, we used valgrind. This
 allowed us to make sure that memory was freed as intended after the program finished execution.
-This was especiallyt helpful when testing garbage collection, the whole point of which is to test that
+This was especially helpful when testing garbage collection, the whole point of which is to test that
 memory no longer in use is deallocated. Finally, we used gcov to determine the coverage of our
 unit tests.
 
@@ -84,8 +84,8 @@ on each of the three team members' computers. These computers had various config
 (one used an ARM CPU, the other two had x86\_64 CPUs. Two computers ran the Linux kernel,
 one ran Apple's modified BSD kernel). This was sufficient for the most part,
 since the tests did not rely on any platform specific behavior (and nor did the project),
-which would mean that even one computer on which test pass should be good enough. However,
-as a means of sanity checking ourselves, we also had the automated tests run on the Travis CI servers,
+which would mean that even one computer on which tests pass should be good enough. However,
+as a means of sanity checking ourselves, we also had the automated tests run on the Travis CI servers
 after every commit that was pushed to GitHub. Our manual and automated tests yield more or
 less the same results on platform, minus a single difference which is caused by a different
 stack depth on two of the machines (one machine requires a less deep recursion to cause
@@ -135,7 +135,7 @@ For usability testing, we had the user run through the following set of tasks:
 * Implement a recursive factorial function (without the built-in factorial function)
 * Quit the program without using Ctrl-C
 
-This was done twice at different times, so that we could asses the learnability
+This was done twice at different times, so that we could assess the learnability
 of the program.
 
 #### Manual Tests
@@ -376,7 +376,7 @@ During manual testing, we found several small issues, and a couple of big ones.
 The small issues were that if/else statements, as well as loops, did not create
 errors when their conditions did not evaluate to boolean values. Instead, they
 simply treated these non-boolean values as false. Intuitively, this makes no sense.
-The more significant issue we found was a segemention fault in the type unification code.
+The more significant issue we found was a segmentation fault in the type unification code.
 This occured when a function took a generic parameter (similar to templates in C++).
 With certain type checking cases, it was possible to cause a type substitution
 failure. We also found that creating a type-generic identity function caused
@@ -437,7 +437,7 @@ was fixed by adding the missing freeing and clearing code after the loop.
 #### Matthew Sessions: TODO
 TODO
 
-#### Ryan Alder: TODO
+#### Ryan Alder: Improved Error Messages in parser.c
 TODO
 
 ### Maintenance Process Types Performed
