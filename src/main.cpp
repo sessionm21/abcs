@@ -55,6 +55,7 @@ int main() {
         ref value = abcs.run(buffer);
         if(value == nullptr) {
             std::cout << "Invalid expression." << std::endl;
+            std::cout << abcs.get_error_messages() << std::endl;
         } else {
             std::string name = "r" + std::to_string(index);
             std::string ans = "ans";
