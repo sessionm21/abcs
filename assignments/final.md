@@ -387,7 +387,7 @@ garbage collection was malfunctioning, which was also a very serious issue.
 
 We found no issues during code review and automated testing. Though this
 doesn't seem very interesting, it is: we applied automatic testing
-to garbage collection, which we have determined during automatic testing
+to garbage collection, which we have determined during manual testing
 to contain an issue. This forced us to reconsider the cause of the high memory
 usage. Likely, this is because the garbage collection runs after the command is
 finished executing, which means that by that time, system calls have been made
