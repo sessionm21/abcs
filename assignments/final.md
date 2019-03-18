@@ -181,6 +181,29 @@ rely on this invalid behavior, they will not experience issues. This issue was a
 team member, since it was both less significant and less work intensive.
 
 ### Issues Resolved
+
+#### Danila Fedorin: If/Else/While non-boolean weirdness
+As explained above, the calculator did not report an error when a loop was executed
+that had a non-boolean value as a condition. This value was simply interpreted as false.
+When initially investigating this issue, I simply ran the "reference" front end provided
+with libababcus, a program called "interactive". This program uses doubles instead
+of arbitrary precision floating point numbers, and doesn't support anything besides
+the most minimal set of mathematical functions. This program, however, did not suffer
+from the same defect as abcs - it didn't allow numbers or other values in conditions,
+and immediately reported an error. This meant that the issue lay on the boundary between
+the front end and the library. It turns out that the front end actually doesn't use the
+error codes as intended - it ignores them. Rather, it checks that the returned value
+from evaluating an expression is null or not. By the convention of the library, a function
+that can fail initializes its outputs to NULL. Thus, this was sufficient. However,
+it turned out that in the while/do-while loops, while the error code is
+set correctly, the result of evaluating the loop is not freed / set to NULL.
+Since abcs ignored error codes, it was not aware that an error occured. This
+was fixed by adding the missing freeing and clearing code after the loop.
+
+#### Matthew Sessions: TODO
+TODO
+
+#### Ryan Alder: TODO
 TODO
 
 ### Maintenance Process Types Performed
