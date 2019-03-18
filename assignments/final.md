@@ -434,8 +434,13 @@ set correctly, the result of evaluating the loop is not freed / set to NULL.
 Since abcs ignored error codes, it was not aware that an error occured. This
 was fixed by adding the missing freeing and clearing code after the loop.
 
-#### Matthew Sessions: TODO
-TODO
+#### Matthew Sessions: Descriptive Error Messages in interpreter.c
+Given that any error in a line of the script would print the same error message, and only one error message.
+More descriptive error messages need to printed such that an error would be easier to identify. A string 
+was added to the libabacus struct for storing this error message, since this struct should be available
+throughout functions in the interpreter.c file. Simply reallocating the size of this string and appending
+the current error to the full error message was enough. This error message is then printed in the main
+shell portion of the program should the interpreter fail.
 
 #### Ryan Alder: Improved Error Messages in parser.c
 As previously mentioned, one of the largest issues that we found with abcs is the lack of informative error messages. For every single error the user was greeted with "Invalid Expression", regardless of what the error was. Given that, I set out to add more informative error statements in the parser. Error strings are set to the main struct, and accessed inside parser as the program encounters errors. Based on where the error is found, a unique error statement is set and then printed outside in main.cpp once it realizes the error variable has been set. A full set of potential errors has now been accounted for and manually tested for any errors the parser encounters.
