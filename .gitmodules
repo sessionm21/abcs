@@ -1,6 +1,6 @@
 [submodule "external/libabacus"]
 	path = external/libabacus
-	url = https://dev.danilafe.com/Experiments/libabacus
+	url = https://github.com/sessionm21/libabacus.git
 [submodule "external/greatest"]
 	path = external/greatest
 	url = https://github.com/silentbicycle/greatest.git
